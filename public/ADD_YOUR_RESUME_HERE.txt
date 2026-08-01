@@ -1,0 +1,3 @@
+Resume downloads are now handled via Site Settings -> Resume -> "Resume file" in the admin
+dashboard (paste a direct URL to your uploaded PDF), not a static file in this folder.
+This file is just a leftover placeholder -- safe to delete.

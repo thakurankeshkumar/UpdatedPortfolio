@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Production and test output
+coverage/
+.nyc_output/
+
+# Environment variables
+.env
+.env*.local
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Local caches
+.cache/
+.cache_ggshield
+.eslintcache
+.tsbuildinfo
+*.tsbuildinfo
+
+# Package manager caches
+.npm/
+.pnpm-store/
+
+# Deployment
+.vercel/
+.netlify/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+

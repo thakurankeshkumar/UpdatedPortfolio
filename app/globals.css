@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-ink font-body antialiased;
+}
+
+::selection {
+  @apply bg-primary/20 text-primary;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Reading progress bar (blog detail) */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  z-index: 100;
+  transition: width 0.1s ease-out;
+}
+
+/* Prose styling for markdown-rendered blog/project content */
+.prose-custom h2 {
+  @apply font-heading text-2xl font-semibold mt-10 mb-4;
+}
+.prose-custom h3 {
+  @apply font-heading text-xl font-semibold mt-8 mb-3;
+}
+.prose-custom p {
+  @apply text-ink/80 leading-relaxed mb-4;
+}
+.prose-custom ul {
+  @apply list-disc pl-6 mb-4 space-y-1 text-ink/80;
+}
+.prose-custom code {
+  @apply font-code text-sm bg-muted px-1.5 py-0.5 rounded;
+}
+.prose-custom a {
+  @apply text-primary underline underline-offset-2;
+}
