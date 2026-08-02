@@ -46,11 +46,13 @@ const SiteSettingsSchema = new Schema(
     heroSubheadline: { type: String, default: 'I build scalable web applications, modern APIs and digital experiences — while documenting everything I learn along the way.' },
 
     // About page
-    aboutIntro: { type: [String], default: [
-      'I\u2019m Ankesh — a 3rd-year B.Tech CSE student who somewhere between operating systems assignments and HDL presentations started shipping real full-stack applications.',
-      'That habit turned into two goals: freelancing as a software developer, and building a public audience around how the work actually gets done.',
-      'I work fastest in the Next.js / Node.js / MongoDB world, but I don\u2019t stay in one lane — I reach for whatever stack the problem actually needs.',
-    ] },
+    aboutIntro: {
+      type: [String], default: [
+        'I\u2019m Ankesh — a 3rd-year B.Tech CSE student who somewhere between operating systems assignments and HDL presentations started shipping real full-stack applications.',
+        'That habit turned into two goals: freelancing as a software developer, and building a public audience around how the work actually gets done.',
+        'I work fastest in the Next.js / Node.js / MongoDB world, but I don\u2019t stay in one lane — I reach for whatever stack the problem actually needs.',
+      ]
+    },
     currentFocus: { type: String, default: 'Advanced backend development (Node.js, Express, MongoDB), DSA for internship prep, and shipping freelance projects alongside coursework.' },
     futureVision: { type: String, default: 'Building a small studio around freelance dev work and a SaaS product of my own — with content as the distribution channel, not an afterthought.' },
     timeline: { type: [TimelineItemSchema], default: [] },

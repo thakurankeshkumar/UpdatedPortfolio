@@ -15,7 +15,7 @@ export default function DashboardOverview() {
 
   useEffect(() => {
     CARDS.forEach(async (c) => {
-      const res = await fetch(c.endpoint);
+      const res = await fetch(c.endpoint, { cache: 'no-store' });
       const data = await res.json();
       setCounts((prev) => ({ ...prev, [c.key]: Array.isArray(data) ? data.length : 0 }));
     });

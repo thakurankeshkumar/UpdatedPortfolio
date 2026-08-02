@@ -18,7 +18,7 @@ export default function SettingsPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Identity & Security');
 
   useEffect(() => {
-    fetch('/api/settings').then((r) => r.json()).then((data) => { setSettings(data); setLoading(false); });
+    fetch('/api/settings', { cache: 'no-store' }).then((r) => r.json()).then((data) => { setSettings(data); setLoading(false); });
   }, []);
 
   function set(key: string, value: any) {
@@ -31,6 +31,7 @@ export default function SettingsPage() {
       const res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
         body: JSON.stringify(settings),
       });
       if (!res.ok) throw new Error();
