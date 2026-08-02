@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import * as Icons from 'lucide-react';
 import { ArrowRight, Play } from 'lucide-react';
 import { Reveal } from '@/animations/reveal';
@@ -48,13 +49,23 @@ export function ContentCreatorPreview({ platforms, videos }: { platforms?: Platf
               key={v.title}
               className={`group relative aspect-[9/13] overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/15 via-accent/10 to-transparent p-4 transition-transform hover:-translate-y-1 ${i % 2 === 1 ? 'mt-6' : ''}`}
             >
-              <span className="inline-block rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-ink/60 shadow-soft">{v.tag}</span>
+              {v.thumbnail && (
+                <Image
+                  src={v.thumbnail}
+                  alt={v.title}
+                  fill
+                  sizes="(min-width: 1024px) 260px, 50vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-dark/75 via-transparent to-transparent" />
+              <span className="relative inline-block rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-ink/60 shadow-soft">{v.tag}</span>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-primary shadow-lift transition-transform group-hover:scale-110">
                   <Play size={18} fill="currentColor" />
                 </div>
               </div>
-              <span className="absolute bottom-4 left-4 right-4 text-xs font-medium text-ink/70 line-clamp-2">{v.title}</span>
+              <span className={`absolute bottom-4 left-4 right-4 line-clamp-2 text-xs font-medium ${v.thumbnail ? 'text-white' : 'text-ink/70'}`}>{v.title}</span>
             </div>
           ))}
         </Reveal>

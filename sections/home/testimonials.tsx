@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Star, Quote } from 'lucide-react';
 import { Testimonial } from '@/types';
 import { SectionHeading } from '@/components/layout/section-heading';
@@ -19,8 +20,12 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
 
                 <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent font-heading text-sm font-semibold text-white">
-                      {t.name.charAt(0)}
+                    <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-accent font-heading text-sm font-semibold text-white">
+                      {t.avatar ? (
+                        <Image src={t.avatar} alt={t.name} fill sizes="44px" className="object-cover" />
+                      ) : (
+                        t.name.charAt(0)
+                      )}
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-ink">{t.name}</div>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, ArrowUpRight, Clock } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { SectionHeading } from '@/components/layout/section-heading';
@@ -16,8 +17,13 @@ export function LatestBlogs({ posts }: { posts: BlogPost[] }) {
                 href={`/blog/${post.slug}`}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-soft transition-all hover:-translate-y-1.5 hover:shadow-lift"
               >
-                <div className="flex h-32 items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-                  <span className="font-heading text-3xl font-bold text-ink/10">{post.category?.slice(0, 2).toUpperCase()}</span>
+                <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10">
+                  {post.coverImage ? (
+                    <Image src={post.coverImage} alt={post.title} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  ) : (
+                    <span className="font-heading text-3xl font-bold text-ink/10">{post.category?.slice(0, 2).toUpperCase()}</span>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
                   <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">{post.category}</span>

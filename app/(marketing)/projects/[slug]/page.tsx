@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
 import { getProjectBySlug } from '@/services/projects';
@@ -17,7 +18,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: project.title,
     description: project.summary,
-    openGraph: { title: project.title, description: project.summary, url: `${SITE.url}/projects/${project.slug}` },
+    openGraph: {
+      title: project.title,
+      description: project.summary,
+      url: `${SITE.url}/projects/${project.slug}`,
+      images: project.coverImage ? [{ url: project.coverImage }] : undefined,
+    },
   };
 }
 
@@ -46,6 +52,19 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
           <span className="mb-3 inline-block rounded-full bg-muted px-3 py-1 text-xs font-medium text-ink/60">{project.category}</span>
           <h1 className="font-heading text-4xl font-bold tracking-tight text-ink md:text-5xl">{project.title}</h1>
           <p className="mt-4 text-lg text-ink/60">{project.summary}</p>
+
+          {project.coverImage && (
+            <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-3xl border border-border bg-muted shadow-lift">
+              <Image
+                src={project.coverImage}
+                alt={project.title}
+                fill
+                priority
+                sizes="(min-width: 768px) 768px, 100vw"
+                className="object-cover"
+              />
+            </div>
+          )}
 
           <div className="mt-6 flex flex-wrap gap-2">
             {project.techStack.map((t) => <Badge key={t}>{t}</Badge>)}
@@ -83,6 +102,16 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
                 <p className="mt-2 text-sm text-ink/60">{project.solutions}</p>
               </div>
             )}
+          </Reveal>
+        )}
+
+        {project.gallery?.length > 0 && (
+          <Reveal delay={0.2} className="mt-10 grid gap-4 sm:grid-cols-2">
+            {project.gallery.map((image, index) => (
+              <div key={image} className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-muted">
+                <Image src={image} alt={`${project.title} screenshot ${index + 1}`} fill sizes="(min-width: 768px) 384px, 100vw" className="object-cover" />
+              </div>
+            ))}
           </Reveal>
         )}
       </div>

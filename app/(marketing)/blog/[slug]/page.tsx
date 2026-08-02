@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { getBlogBySlug } from '@/services/blogs';
@@ -16,7 +17,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: post.title,
     description: post.excerpt,
-    openGraph: { title: post.title, description: post.excerpt, url: `${SITE.url}/blog/${post.slug}`, type: 'article' },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `${SITE.url}/blog/${post.slug}`,
+      type: 'article',
+      images: post.coverImage ? [{ url: post.coverImage }] : undefined,
+    },
   };
 }
 
@@ -60,6 +67,18 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
                 </div>
               </div>
             </div>
+            {post.coverImage && (
+              <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-3xl border border-border bg-muted shadow-lift">
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  priority
+                  sizes="(min-width: 768px) 672px, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
           </Reveal>
         </div>
       </div>

@@ -29,8 +29,9 @@ export async function middleware(req: NextRequest) {
   const isProtectedApi = protectedApi.some((p) => pathname.startsWith(p));
   const isMutation = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method);
   const isMessagesRead = pathname.startsWith('/api/messages') && req.method === 'GET';
+  const isSettingsRead = pathname.startsWith('/api/settings') && req.method === 'GET';
 
-  if ((isProtectedApi && isMutation) || isMessagesRead) {
+  if ((isProtectedApi && isMutation) || isMessagesRead || isSettingsRead) {
     if (!(await isValid(token))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

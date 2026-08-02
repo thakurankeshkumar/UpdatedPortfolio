@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import * as Icons from 'lucide-react';
 import { Play } from 'lucide-react';
 import { Reveal, Stagger, StaggerItem } from '@/animations/reveal';
@@ -63,14 +64,24 @@ export default async function ContentCreatorPage() {
                     href={v.href || '#'}
                     target={v.href && v.href !== '#' ? '_blank' : undefined}
                     rel="noreferrer"
-                    className="group flex aspect-[9/13] flex-col justify-between rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-accent/10 p-5 transition-transform hover:-translate-y-1"
+                    className="group relative flex aspect-[9/13] flex-col justify-between overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-accent/10 p-5 transition-transform hover:-translate-y-1"
                   >
-                    <span className="w-fit rounded-full bg-white px-3 py-1 text-xs font-medium text-ink/60 shadow-soft">{v.tag}</span>
-                    <div>
+                    {v.thumbnail && (
+                      <Image
+                        src={v.thumbnail}
+                        alt={v.title}
+                        fill
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent" />
+                    <span className="relative w-fit rounded-full bg-white px-3 py-1 text-xs font-medium text-ink/60 shadow-soft">{v.tag}</span>
+                    <div className="relative">
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-primary shadow-soft transition-transform group-hover:scale-110">
                         <Play size={16} fill="currentColor" />
                       </div>
-                      <p className="text-sm font-medium text-ink">{v.title}</p>
+                      <p className={v.thumbnail ? 'text-sm font-medium text-white' : 'text-sm font-medium text-ink'}>{v.title}</p>
                     </div>
                   </a>
                 </StaggerItem>

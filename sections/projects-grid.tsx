@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, Github, ExternalLink } from 'lucide-react';
 import { Project } from '@/types';
@@ -41,9 +42,23 @@ export function ProjectsGrid({ projects, categories }: { projects: Project[]; ca
               href={`/projects/${p.slug}`}
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-soft transition-all hover:-translate-y-1.5 hover:shadow-lift"
             >
-              <div className={cn('flex h-28 items-center justify-between bg-gradient-to-br px-6', GRADIENTS[i % GRADIENTS.length])}>
-                <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-ink/70 backdrop-blur">{p.category}</span>
-                <ArrowUpRight size={20} className="text-ink/30 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+              <div className={cn('relative flex h-44 items-start justify-between overflow-hidden bg-gradient-to-br p-5', GRADIENTS[i % GRADIENTS.length])}>
+                {p.coverImage ? (
+                  <Image
+                    src={p.coverImage}
+                    alt={p.title}
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <span className="absolute inset-0 flex items-center justify-center font-heading text-5xl font-bold text-ink/10">
+                    {p.title.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+                <span className="relative rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink/70 shadow-soft backdrop-blur">{p.category}</span>
+                <ArrowUpRight size={20} className="relative text-white/80 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </div>
               <div className="flex flex-1 flex-col p-7">
                 <h3 className="font-heading text-xl font-semibold text-ink">{p.title}</h3>

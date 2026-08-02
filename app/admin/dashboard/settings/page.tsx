@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/toast';
 import { RepeaterList } from '@/components/admin/repeater-list';
 import { TagListEditor } from '@/components/admin/tag-list-editor';
 import { cn } from '@/lib/utils';
+import { AdminHeader } from '@/components/admin/admin-ui';
 
 const TABS = ['Identity & Security', 'Home', 'About', 'Resume', 'Content Creator', 'Footer', 'Page Copy'] as const;
 
@@ -49,33 +50,35 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-bold text-ink">Site Settings</h1>
-          <p className="mt-1 text-sm text-ink/50">Everything here controls the live site — logo, copy, resume, and more.</p>
-        </div>
-        <Button variant="primary" onClick={handleSave} disabled={saving}>
-          {saving ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : <><Save size={16} /> Save Changes</>}
-        </Button>
-      </div>
+      <AdminHeader
+        title="Site Settings"
+        description="Control the live site identity, copy, resume, content creator links, footer, and page-level labels."
+        action={
+          <Button variant="primary" onClick={handleSave} disabled={saving} className="w-full sm:w-auto">
+            {saving ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : <><Save size={16} /> Save Changes</>}
+          </Button>
+        }
+      />
 
-      <div className="mb-8 flex flex-wrap gap-2 border-b border-border pb-4">
+      <div className="sticky top-16 z-10 mt-6 border-b border-border bg-muted/95 pb-4 pt-2 backdrop-blur md:top-0">
+        <div className="flex gap-2 overflow-x-auto">
         {TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={cn(
-              'rounded-full px-4 py-2 text-sm font-medium transition-colors',
-              tab === t ? 'bg-primary text-white' : 'text-ink/60 hover:bg-muted'
+              'shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors',
+              tab === t ? 'bg-primary text-white' : 'bg-white text-ink/60 hover:text-primary'
             )}
           >
             {t}
           </button>
         ))}
+        </div>
       </div>
 
       {tab === 'Identity & Security' && (
-        <div className="max-w-xl space-y-5">
+        <div className="mt-8 max-w-xl space-y-5 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div><Label>Site Name</Label><Input value={settings.siteName} onChange={(e) => set('siteName', e.target.value)} /></div>
           <div><Label>Navbar Logo Text</Label><Input value={settings.logoText} onChange={(e) => set('logoText', e.target.value)} /></div>
           <div><Label>Tagline (used in footer/meta by default)</Label><Textarea value={settings.tagline} onChange={(e) => set('tagline', e.target.value)} /></div>
@@ -91,7 +94,7 @@ export default function SettingsPage() {
       )}
 
       {tab === 'Home' && (
-        <div className="max-w-xl space-y-5">
+        <div className="mt-8 max-w-xl space-y-5 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div><Label>Hero badge text</Label><Input value={settings.heroBadge} onChange={(e) => set('heroBadge', e.target.value)} /></div>
           <div>
             <Label>Hero headline</Label>
@@ -103,7 +106,7 @@ export default function SettingsPage() {
       )}
 
       {tab === 'About' && (
-        <div className="max-w-2xl space-y-8">
+        <div className="mt-8 max-w-2xl space-y-8 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div><Label>About page title</Label><Input value={settings.aboutPageTitle} onChange={(e) => set('aboutPageTitle', e.target.value)} /></div>
 
           <div>
@@ -147,7 +150,7 @@ export default function SettingsPage() {
       )}
 
       {tab === 'Resume' && (
-        <div className="max-w-2xl space-y-8">
+        <div className="mt-8 max-w-2xl space-y-8 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div><Label>Resume summary tagline</Label><Input value={settings.resumeSummary} onChange={(e) => set('resumeSummary', e.target.value)} /></div>
 
           <div>
@@ -203,7 +206,7 @@ export default function SettingsPage() {
       )}
 
       {tab === 'Content Creator' && (
-        <div className="max-w-2xl space-y-8">
+        <div className="mt-8 max-w-2xl space-y-8 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div>
             <Label>Platforms</Label>
             <p className="mb-2 text-xs text-ink/40">Icon names come from lucide-react (e.g. Youtube, Instagram, Linkedin, Twitter).</p>
@@ -231,6 +234,7 @@ export default function SettingsPage() {
               fields={[
                 { key: 'title', label: 'Title' },
                 { key: 'tag', label: 'Tag', placeholder: 'Tutorial' },
+                { key: 'thumbnail', label: 'Thumbnail', type: 'image' },
                 { key: 'href', label: 'Link URL' },
               ]}
             />
@@ -239,7 +243,7 @@ export default function SettingsPage() {
       )}
 
       {tab === 'Footer' && (
-        <div className="max-w-2xl space-y-8">
+        <div className="mt-8 max-w-2xl space-y-8 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div><Label>Footer tagline (falls back to site tagline if blank)</Label><Textarea value={settings.footerTagline} onChange={(e) => set('footerTagline', e.target.value)} /></div>
           <div><Label>Copyright line (falls back to auto-generated if blank)</Label><Input value={settings.footerCopyright} onChange={(e) => set('footerCopyright', e.target.value)} /></div>
           <div>
@@ -261,7 +265,7 @@ export default function SettingsPage() {
       )}
 
       {tab === 'Page Copy' && (
-        <div className="max-w-xl space-y-5">
+        <div className="mt-8 max-w-xl space-y-5 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
           <div><Label>Projects page title</Label><Input value={settings.projectsPageTitle} onChange={(e) => set('projectsPageTitle', e.target.value)} /></div>
           <div><Label>Projects page subtitle</Label><Textarea value={settings.projectsPageSubtitle} onChange={(e) => set('projectsPageSubtitle', e.target.value)} /></div>
           <div>

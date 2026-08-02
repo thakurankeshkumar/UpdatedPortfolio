@@ -1,8 +1,9 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Loader2, Lock, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react';
 import { Input, Label } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -12,6 +13,7 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,15 +37,16 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-dark px-6">
-      <div className="pointer-events-none absolute left-1/2 top-1/3 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-primary/25 to-accent/20 blur-[120px]" />
-
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-dark px-6 py-10">
+      <Link href="/" className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white">
+        <ArrowLeft size={15} /> Home
+      </Link>
       <motion.form
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         onSubmit={handleSubmit}
-        className="relative w-full max-w-sm rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl backdrop-blur-xl"
+        className="relative w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.05] p-6 shadow-2xl backdrop-blur-xl sm:p-8"
       >
         <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-white">
           <Lock size={20} />
@@ -54,16 +57,31 @@ export default function AdminLoginPage() {
         <div className="mt-7">
           <Label htmlFor="email" className="text-white/70">Email</Label>
           <Input
-            id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+            id="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
             className="border-white/10 bg-white/5 text-white placeholder:text-white/30"
           />
         </div>
         <div className="mt-4">
           <Label htmlFor="password" className="text-white/70">Password</Label>
-          <Input
-            id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-            className="border-white/10 bg-white/5 text-white placeholder:text-white/30"
-          />
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border-white/10 bg-white/5 pr-12 text-white placeholder:text-white/30"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((value) => !value)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-white/40 hover:bg-white/10 hover:text-white"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </div>
 
         {error && (

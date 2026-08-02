@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight, Github, ExternalLink } from 'lucide-react';
 import { Project } from '@/types';
 import { SectionHeading } from '@/components/layout/section-heading';
@@ -20,10 +21,20 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
         <Reveal className="mb-6">
           <Link
             href={`/projects/${hero.slug}`}
-            className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-dark to-[#1a2540] p-10 text-white shadow-lift lg:flex-row lg:items-center lg:gap-10"
+            className="group relative flex min-h-[360px] flex-col justify-end overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-dark to-[#1a2540] p-8 text-white shadow-lift md:p-10"
           >
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary/30 blur-[100px] transition-transform duration-500 group-hover:scale-125" />
-            <div className="relative flex-1">
+            {hero.coverImage && (
+              <Image
+                src={hero.coverImage}
+                alt={hero.title}
+                fill
+                sizes="(min-width: 1024px) 1100px, 100vw"
+                className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/70 to-dark/20" />
+            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-dark/95 to-transparent" />
+            <div className="relative max-w-2xl">
               <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/70">{hero.category} · Featured</span>
               <h3 className="mt-4 font-heading text-3xl font-bold md:text-4xl">{hero.title}</h3>
               <p className="mt-3 max-w-lg text-white/60">{hero.summary}</p>
@@ -40,11 +51,13 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
                 {hero.githubUrl && <span className="inline-flex items-center gap-1 text-white/40"><Github size={13} /> Source</span>}
               </div>
             </div>
-            <div className="relative hidden shrink-0 lg:block">
-              <div className="flex h-48 w-72 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] font-heading text-5xl font-bold text-white/10">
+            {!hero.coverImage && (
+              <div className="absolute right-10 top-1/2 hidden -translate-y-1/2 lg:block">
+                <div className="flex h-48 w-72 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] font-heading text-5xl font-bold text-white/10">
                 {hero.title.slice(0, 2).toUpperCase()}
+                </div>
               </div>
-            </div>
+            )}
           </Link>
         </Reveal>
 
@@ -54,16 +67,24 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
               <StaggerItem key={p._id}>
                 <Link
                   href={`/projects/${p.slug}`}
-                  className="group flex h-full flex-col rounded-2xl border border-border bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card"
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-soft transition-all hover:-translate-y-1 hover:shadow-card"
                 >
-                  <div className="mb-3 flex items-start justify-between">
-                    <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-ink/60">{p.category}</span>
-                    <ArrowUpRight size={16} className="text-ink/30 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+                  <div className="relative h-32 bg-gradient-to-br from-primary/10 to-accent/10">
+                    {p.coverImage ? (
+                      <Image src={p.coverImage} alt={p.title} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    ) : (
+                      <span className="flex h-full items-center justify-center font-heading text-3xl font-bold text-ink/10">{p.title.slice(0, 2).toUpperCase()}</span>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+                    <ArrowUpRight size={16} className="absolute right-4 top-4 text-white/80 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </div>
-                  <h3 className="font-heading font-semibold text-ink">{p.title}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-ink/60">{p.summary}</p>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {p.techStack.slice(0, 3).map((t) => <Badge key={t}>{t}</Badge>)}
+                  <div className="flex flex-1 flex-col p-6">
+                    <span className="mb-3 w-fit rounded-full bg-muted px-3 py-1 text-xs font-medium text-ink/60">{p.category}</span>
+                    <h3 className="font-heading font-semibold text-ink">{p.title}</h3>
+                    <p className="mt-2 line-clamp-2 flex-1 text-sm text-ink/60">{p.summary}</p>
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {p.techStack.slice(0, 3).map((t) => <Badge key={t}>{t}</Badge>)}
+                    </div>
                   </div>
                 </Link>
               </StaggerItem>

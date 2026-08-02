@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Clock, ArrowUpRight } from 'lucide-react';
 import { BlogPost } from '@/types';
@@ -30,8 +31,19 @@ export function BlogList({ posts }: { posts: BlogPost[] }) {
               href={`/blog/${post.slug}`}
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-soft transition-all hover:-translate-y-1.5 hover:shadow-lift"
             >
-              <div className="flex h-28 items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-                <span className="font-heading text-3xl font-bold text-ink/10">{post.category?.slice(0, 2).toUpperCase()}</span>
+              <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10">
+                {post.coverImage ? (
+                  <Image
+                    src={post.coverImage}
+                    alt={post.title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <span className="font-heading text-3xl font-bold text-ink/10">{post.category?.slice(0, 2).toUpperCase()}</span>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
               <div className="flex flex-1 flex-col p-6">
                 <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">{post.category}</span>
