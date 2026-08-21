@@ -6,6 +6,40 @@ import { noStoreJson } from '@/lib/api';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+const ALLOWED_SETTINGS_FIELDS = [
+  'siteName',
+  'logoText',
+  'tagline',
+  'secretAdminCode',
+  'heroBadge',
+  'heroHeadline',
+  'heroSubheadline',
+  'aboutIntro',
+  'currentFocus',
+  'futureVision',
+  'timeline',
+  'resumeDownloadUrl',
+  'resumeSummary',
+  'experience',
+  'education',
+  'resumeSkills',
+  'platforms',
+  'videos',
+  'footerTagline',
+  'footerSocials',
+  'footerCopyright',
+  'aboutPageTitle',
+  'projectsPageTitle',
+  'projectsPageSubtitle',
+  'servicesPageTitle',
+  'servicesPageSubtitle',
+  'blogPageTitle',
+  'blogPageSubtitle',
+  'contentPageTitle',
+  'contentPageSubtitle',
+  'projectCategories',
+] as const;
+
 export async function GET() {
   try {
     await connectDB();
@@ -23,7 +57,11 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     let doc = await SiteSettings.findOne();
     if (!doc) doc = new SiteSettings({});
-    Object.assign(doc, body);
+    ALLOWED_SETTINGS_FIELDS.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(body, field)) {
+        doc.set(field, body[field]);
+      }
+    });
     await doc.save();
     return noStoreJson(doc);
   } catch (err: any) {

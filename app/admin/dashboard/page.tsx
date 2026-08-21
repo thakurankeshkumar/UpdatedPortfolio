@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, FolderKanban, FileText, Wrench, Quote, Mail, Settings } from 'lucide-react';
+import { ArrowUpRight, FolderKanban, FileText, Wrench, Quote, Mail, Settings, Images } from 'lucide-react';
 import { AdminHeader } from '@/components/admin/admin-ui';
 
 const CARDS = [
@@ -10,6 +10,7 @@ const CARDS = [
   { key: 'services', label: 'Services', endpoint: '/api/services', href: '/admin/dashboard/services', icon: Wrench },
   { key: 'testimonials', label: 'Testimonials', endpoint: '/api/testimonials', href: '/admin/dashboard/testimonials', icon: Quote },
   { key: 'messages', label: 'Messages', endpoint: '/api/messages', href: '/admin/dashboard/messages', icon: Mail },
+  { key: 'media', label: 'Media', endpoint: '/api/media', href: '/admin/dashboard/media', icon: Images },
 ];
 
 export default function DashboardOverview() {
@@ -17,14 +18,21 @@ export default function DashboardOverview() {
   const [unread, setUnread] = useState(0);
 
   useEffect(() => {
-    CARDS.forEach(async (c) => {
-      const res = await fetch(c.endpoint, { cache: 'no-store' });
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setCounts((prev) => ({ ...prev, [c.key]: data.length }));
-        if (c.key === 'messages') setUnread(data.filter((item: any) => !item.read).length);
-      }
-    });
+    Promise.all(
+      CARDS.map(async (c) => {
+        const res = await fetch(c.endpoint, { cache: 'no-store' });
+        const data = await res.json();
+        return { key: c.key, data };
+      })
+    ).then((results) => {
+      const next: Record<string, number> = {};
+      results.forEach(({ key, data }) => {
+        if (Array.isArray(data)) next[key] = data.length;
+        if (data?.resources) next[key] = data.resources.length;
+        if (key === 'messages' && Array.isArray(data)) setUnread(data.filter((item: any) => !item.read).length);
+      });
+      setCounts(next);
+    }).catch(() => setCounts({}));
   }, []);
 
   return (
@@ -39,7 +47,7 @@ export default function DashboardOverview() {
         }
       />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         {CARDS.map((c) => (
           <Link key={c.key} href={c.href} className="group rounded-2xl border border-border bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
             <div className="flex items-start justify-between">
@@ -60,6 +68,7 @@ export default function DashboardOverview() {
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {[
               ['Add project visuals', 'Upload cover and gallery images for every featured project.', '/admin/dashboard/projects'],
+              ['Reuse media', 'Pick previous Cloudinary uploads instead of storing duplicate files.', '/admin/dashboard/media'],
               ['Keep writing fresh', 'Draft, publish, and attach blog cover images.', '/admin/dashboard/blogs'],
               ['Tune page copy', 'Update hero, page titles, resume, socials, and categories.', '/admin/dashboard/settings'],
               ['Follow up quickly', `${unread} unread message${unread === 1 ? '' : 's'} waiting.`, '/admin/dashboard/messages'],

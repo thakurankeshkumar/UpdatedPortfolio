@@ -3,18 +3,27 @@ import { z } from 'zod';
 import { connectDB } from '@/lib/mongodb';
 import Message from '@/models/Message';
 import { sendContactNotification } from '@/lib/mail';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const schema = z.object({
-  name: z.string().min(2),
+  name: z.string().min(2).max(80),
   email: z.string().email(),
-  company: z.string().optional(),
-  budget: z.string().optional(),
-  projectType: z.string().optional(),
-  message: z.string().min(10),
+  company: z.string().max(120).optional(),
+  budget: z.string().max(80).optional(),
+  projectType: z.string().max(120).optional(),
+  message: z.string().min(10).max(3000),
 });
 
 export async function POST(req: NextRequest) {
   try {
+    const retryAfter = checkRateLimit(`contact:${getClientIp(req)}`, 8, 15 * 60 * 1000);
+    if (retryAfter) {
+      return NextResponse.json(
+        { error: 'Too many messages. Please wait a few minutes and try again.' },
+        { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+      );
+    }
+
     const body = await req.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {

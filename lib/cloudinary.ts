@@ -45,8 +45,59 @@ export async function uploadImage(base64: string, folder = 'ankesh-brand') {
   return { url: result.secure_url, publicId: result.public_id };
 }
 
-export async function deleteImage(publicId: string) {
-  return cloudinary.uploader.destroy(publicId);
+export function getPublicIdFromUrl(value?: string) {
+  if (!value) return '';
+  if (!value.includes('res.cloudinary.com')) return value;
+
+  try {
+    const url = new URL(value);
+    const uploadIndex = url.pathname.indexOf('/upload/');
+    if (uploadIndex === -1) return '';
+
+    const afterUpload = url.pathname.slice(uploadIndex + '/upload/'.length);
+    const parts = afterUpload.split('/').filter(Boolean);
+    const versionIndex = parts.findIndex((part) => /^v\d+$/.test(part));
+    const publicPath = (versionIndex >= 0 ? parts.slice(versionIndex + 1) : parts).join('/');
+    return decodeURIComponent(publicPath).replace(/\.[a-z0-9]+$/i, '');
+  } catch {
+    return '';
+  }
+}
+
+export async function deleteImage(publicIdOrUrl: string) {
+  const configError = getCloudinaryConfigError();
+  if (configError) throw new Error(configError);
+
+  const publicId = getPublicIdFromUrl(publicIdOrUrl);
+  if (!publicId) throw new Error('Could not identify this Cloudinary asset.');
+
+  return cloudinary.uploader.destroy(publicId, { invalidate: true });
+}
+
+export async function listImages(folder = 'ankesh-brand', nextCursor?: string) {
+  const configError = getCloudinaryConfigError();
+  if (configError) throw new Error(configError);
+
+  const result = await cloudinary.api.resources({
+    type: 'upload',
+    resource_type: 'image',
+    prefix: folder,
+    max_results: 60,
+    next_cursor: nextCursor,
+  });
+
+  return {
+    resources: result.resources.map((asset: any) => ({
+      publicId: asset.public_id,
+      url: asset.secure_url,
+      width: asset.width,
+      height: asset.height,
+      bytes: asset.bytes,
+      format: asset.format,
+      createdAt: asset.created_at,
+    })),
+    nextCursor: result.next_cursor || '',
+  };
 }
 
 export default cloudinary;

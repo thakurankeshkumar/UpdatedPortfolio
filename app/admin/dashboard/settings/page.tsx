@@ -1,4 +1,5 @@
 'use client';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { Save, Loader2 } from 'lucide-react';
 import { Input, Textarea, Label } from '@/components/ui/input';
@@ -10,6 +11,18 @@ import { cn } from '@/lib/utils';
 import { AdminHeader } from '@/components/admin/admin-ui';
 
 const TABS = ['Identity & Security', 'Home', 'About', 'Resume', 'Content Creator', 'Footer', 'Page Copy'] as const;
+
+function SettingsPanel({ title, description, children }: { title: string; description: string; children: ReactNode }) {
+  return (
+    <section className="rounded-2xl border border-border bg-white p-5 shadow-soft">
+      <div className="mb-5 border-b border-border pb-4">
+        <h2 className="font-heading text-base font-semibold text-ink">{title}</h2>
+        <p className="mt-1 text-xs leading-relaxed text-ink/50">{description}</p>
+      </div>
+      <div className="space-y-5">{children}</div>
+    </section>
+  );
+}
 
 export default function SettingsPage() {
   const { show } = useToast();
@@ -265,19 +278,27 @@ export default function SettingsPage() {
       )}
 
       {tab === 'Page Copy' && (
-        <div className="mt-8 max-w-xl space-y-5 rounded-3xl border border-border bg-white p-5 shadow-soft md:p-6">
-          <div><Label>Projects page title</Label><Input value={settings.projectsPageTitle} onChange={(e) => set('projectsPageTitle', e.target.value)} /></div>
-          <div><Label>Projects page subtitle</Label><Textarea value={settings.projectsPageSubtitle} onChange={(e) => set('projectsPageSubtitle', e.target.value)} /></div>
-          <div>
-            <Label>Project category filters</Label>
-            <TagListEditor items={settings.projectCategories || []} onChange={(items) => set('projectCategories', items)} placeholder="e.g. SaaS" />
-          </div>
-          <div><Label>Services page title</Label><Input value={settings.servicesPageTitle} onChange={(e) => set('servicesPageTitle', e.target.value)} /></div>
-          <div><Label>Services page subtitle</Label><Textarea value={settings.servicesPageSubtitle} onChange={(e) => set('servicesPageSubtitle', e.target.value)} /></div>
-          <div><Label>Blog page title</Label><Input value={settings.blogPageTitle} onChange={(e) => set('blogPageTitle', e.target.value)} /></div>
-          <div><Label>Blog page subtitle</Label><Textarea value={settings.blogPageSubtitle} onChange={(e) => set('blogPageSubtitle', e.target.value)} /></div>
-          <div><Label>Content Creator page title</Label><Input value={settings.contentPageTitle} onChange={(e) => set('contentPageTitle', e.target.value)} /></div>
-          <div><Label>Content Creator page subtitle</Label><Textarea value={settings.contentPageSubtitle} onChange={(e) => set('contentPageSubtitle', e.target.value)} /></div>
+        <div className="mt-8 grid gap-5 xl:grid-cols-2">
+          <SettingsPanel title="Projects Page" description="Controls the public projects heading and filter chips.">
+            <div><Label>Projects page title</Label><Input value={settings.projectsPageTitle} onChange={(e) => set('projectsPageTitle', e.target.value)} /></div>
+            <div><Label>Projects page subtitle</Label><Textarea value={settings.projectsPageSubtitle} onChange={(e) => set('projectsPageSubtitle', e.target.value)} /></div>
+            <div>
+              <Label>Project category filters</Label>
+              <TagListEditor items={settings.projectCategories || []} onChange={(items) => set('projectCategories', items)} placeholder="e.g. SaaS" />
+            </div>
+          </SettingsPanel>
+          <SettingsPanel title="Services Page" description="Controls the services offer headline and supporting copy.">
+            <div><Label>Services page title</Label><Input value={settings.servicesPageTitle} onChange={(e) => set('servicesPageTitle', e.target.value)} /></div>
+            <div><Label>Services page subtitle</Label><Textarea value={settings.servicesPageSubtitle} onChange={(e) => set('servicesPageSubtitle', e.target.value)} /></div>
+          </SettingsPanel>
+          <SettingsPanel title="Blog Page" description="Controls the writing index title and intro paragraph.">
+            <div><Label>Blog page title</Label><Input value={settings.blogPageTitle} onChange={(e) => set('blogPageTitle', e.target.value)} /></div>
+            <div><Label>Blog page subtitle</Label><Textarea value={settings.blogPageSubtitle} onChange={(e) => set('blogPageSubtitle', e.target.value)} /></div>
+          </SettingsPanel>
+          <SettingsPanel title="Content Creator Page" description="Controls the content hub title and platform positioning.">
+            <div><Label>Content Creator page title</Label><Input value={settings.contentPageTitle} onChange={(e) => set('contentPageTitle', e.target.value)} /></div>
+            <div><Label>Content Creator page subtitle</Label><Textarea value={settings.contentPageSubtitle} onChange={(e) => set('contentPageSubtitle', e.target.value)} /></div>
+          </SettingsPanel>
         </div>
       )}
     </div>

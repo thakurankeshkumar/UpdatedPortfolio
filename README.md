@@ -25,9 +25,17 @@ dark section for the process/CTA blocks.
   The code lives in Site Settings, not in the code, so you can change it anytime.
 - **Dynamic project categories**: the filter chips on `/projects` come from Site Settings → Page
   Copy, not a hardcoded list — add or rename categories there and the filter updates immediately.
+- Improved admin dashboard with dedicated sections for projects, blog, services, testimonials,
+  messages, media, and page-level Site Settings
 - Full CRUD dashboard for Projects, Blog posts, Services, Testimonials, plus a Messages inbox
-- Real auth: bcrypt + JWT + edge middleware protecting the dashboard and every write API route
-- Cloudinary image uploads wired into the admin (project/blog cover images)
+- Real auth: bcrypt + JWT + edge middleware protecting the dashboard, private read APIs, and every
+  write API route
+- Cloudinary media library: upload images, reuse existing assets from admin fields, copy URLs, and
+  permanently delete unused Cloudinary files instead of only hiding them from the frontend
+- Safer uploads with image-type validation, 5MB limits, controlled Cloudinary folders, and real
+  Cloudinary cleanup when project/blog/testimonial records are deleted
+- Security hardening: same-origin checks for protected mutations, security headers, whitelisted
+  settings writes, public contact/newsletter rate limits, and stricter input length validation
 - Nodemailer email notification the moment someone submits the contact form
 - SEO: per-page metadata, OpenGraph, Twitter cards, JSON-LD, dynamic `sitemap.xml` + `robots.txt`
 - Framer Motion throughout: scroll reveals, staggered grids, animated counters, magnetic buttons,
@@ -100,6 +108,9 @@ npm run dev
 - **http://localhost:3000/admin/login** → sign in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`
 - From `/admin/dashboard` you can add/edit/delete everything — changes appear on the live site
   immediately, no redeploy needed
+- Use `/admin/dashboard/media` to manage Cloudinary storage. You can reuse uploaded images from
+  image fields by clicking **Choose Existing**, and delete unused assets from Cloudinary when they
+  are no longer needed.
 
 `npm run seed` won't duplicate your admin account on re-run, but it **will reset** projects,
 services, and blog posts back to the starter set — don't re-run it once you've customized content
@@ -140,7 +151,7 @@ app/
     login/page.tsx
     dashboard/layout.tsx        → sidebar nav + logout
     dashboard/page.tsx          → overview / live stats
-    dashboard/{projects,blogs,services,testimonials,messages}/page.tsx
+    dashboard/{projects,blogs,services,testimonials,messages,media}/page.tsx
   api/
     auth/{login,logout,me}/     → session management
     {projects,blogs,services,testimonials}/route.ts + [id]/route.ts  → CRUD (GET public, writes protected)
@@ -148,6 +159,7 @@ app/
     contact/route.ts            → public: saves message + sends email
     newsletter/route.ts         → public: subscribe
     upload/route.ts             → protected: Cloudinary upload
+    media/route.ts              → protected: Cloudinary library listing + permanent asset deletion
   sitemap.ts, robots.ts, not-found.tsx
 
 models/        → Mongoose schemas
@@ -156,7 +168,7 @@ sections/      → page-specific composed sections (home sections, projects grid
 components/
   ui/          → Button, Card, Badge, Input/Textarea, Toast (shadcn-style primitives)
   layout/      → Header, Footer, CommandPalette, scroll widgets, section heading
-  admin/       → ImageUploadField
+  admin/       → ImageUploadField, ImageListUploadField, MediaLibrary, admin layout helpers
 animations/    → Reveal, Stagger, Counter (Framer Motion wrappers)
 hooks/         → useCrud (generic admin CRUD hook)
 lib/           → mongodb.ts, auth.ts, cloudinary.ts, mail.ts, markdown.ts, crud.ts, fallbackData.ts
@@ -172,8 +184,7 @@ Everything follows the same shape, so adding a new content type (e.g. a "Case St
 `services/`, an API route pair via `lib/crud.ts`'s factory functions, a dashboard page copying
 the pattern in `app/admin/dashboard/testimonials/page.tsx`, and a public page/section to display it.
 
-**Not yet built** (straightforward to add on this foundation when you need them): a full media
-library browser in the admin, a dedicated newsletter-management UI beyond the capture endpoint,
-and a Lighthouse-driven performance pass once real images/content are in place — image sizes,
-lazy-loading thresholds, and bundle splitting are easiest to tune against real content rather
-than placeholders.
+**Ideas to extend next:** a dedicated newsletter-management UI beyond the capture endpoint, media
+usage tracking before deleting shared images, and a Lighthouse-driven performance pass once real
+images/content are in place — image sizes, lazy-loading thresholds, and bundle splitting are easiest
+to tune against real content rather than placeholders.

@@ -19,6 +19,21 @@ export function ImageListUploadField({
     onChange(items.map((item, i) => (i === index ? url : item)).filter(Boolean));
   }
 
+  async function deleteAt(index: number) {
+    const url = items[index];
+    if (!url?.includes('res.cloudinary.com')) {
+      onChange(items.filter((_, i) => i !== index));
+      return;
+    }
+    if (!window.confirm('Delete this gallery image from Cloudinary and remove it from this project?')) return;
+    await fetch('/api/media', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    onChange(items.filter((_, i) => i !== index));
+  }
+
   function move(index: number, direction: -1 | 1) {
     const next = [...items];
     const target = index + direction;
@@ -43,7 +58,7 @@ export function ImageListUploadField({
               <button type="button" onClick={() => move(index, 1)} disabled={index === items.length - 1} className="rounded-lg px-2 py-1 text-xs font-semibold text-ink/35 hover:bg-muted hover:text-primary disabled:opacity-30">
                 Down
               </button>
-              <button type="button" onClick={() => onChange(items.filter((_, i) => i !== index))} className="rounded-lg p-2 text-ink/35 hover:bg-red-50 hover:text-red-500" aria-label="Remove image">
+              <button type="button" onClick={() => deleteAt(index)} className="rounded-lg p-2 text-ink/35 hover:bg-red-50 hover:text-red-500" aria-label="Delete image">
                 <Trash2 size={15} />
               </button>
             </div>
