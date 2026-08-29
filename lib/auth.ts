@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 export const SESSION_COOKIE = 'admin_session';
+export const MAINTENANCE_ACCESS_COOKIE = 'maintenance_admin_access';
 
 export interface SessionPayload {
   id: string;
@@ -21,6 +22,10 @@ export async function verifyPassword(password: string, hash: string) {
 
 export function signSession(payload: SessionPayload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+}
+
+export function signMaintenanceAccess() {
+  return jwt.sign({ purpose: 'maintenance-login' }, JWT_SECRET, { expiresIn: '10m' });
 }
 
 export function verifySession(token: string): SessionPayload | null {

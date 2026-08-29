@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { connectDB } from '@/lib/mongodb';
 import SiteSettings from '@/models/SiteSettings';
+import { MAINTENANCE_ACCESS_COOKIE, signMaintenanceAccess } from '@/lib/auth';
 
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 10;
@@ -50,7 +51,17 @@ export async function POST(req: NextRequest) {
     await connectDB();
     const settings = await SiteSettings.findOne();
     const match = !!code && !!settings?.secretAdminCode && safeEqual(String(code), String(settings.secretAdminCode));
-    return NextResponse.json({ match });
+    const response = NextResponse.json({ match });
+    if (match) {
+      response.cookies.set(MAINTENANCE_ACCESS_COOKIE, signMaintenanceAccess(), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 10,
+      });
+    }
+    return response;
   } catch {
     return NextResponse.json({ match: false });
   }

@@ -10,6 +10,13 @@ export interface SiteSettings {
   logoText: string;
   tagline: string;
   secretAdminCode: string;
+  maintenanceMode: boolean;
+  maintenanceMessage: string;
+  maintenanceTitle: string;
+  maintenanceExpectedReturn: string;
+  maintenanceProgress: number;
+  maintenanceShowProgress: boolean;
+  maintenanceAccent: 'violet' | 'cyan' | 'rose';
   heroBadge: string;
   heroHeadline: string;
   heroSubheadline: string;

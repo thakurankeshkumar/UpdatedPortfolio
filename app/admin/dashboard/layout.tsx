@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, FileText, Wrench, Quote, Mail, LogOut, ExternalLink, Settings, Menu, X, Images } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, FileText, Wrench, Quote, Mail, LogOut, ExternalLink, Settings, Menu, X, Images, Power } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV = [
@@ -14,6 +14,7 @@ const NAV = [
   { label: 'Media Library', href: '/admin/dashboard/media', icon: Images },
   { label: 'Messages', href: '/admin/dashboard/messages', icon: Mail },
   { label: 'Site Settings', href: '/admin/dashboard/settings', icon: Settings },
+  { label: 'Maintenance', href: '/admin/dashboard/maintenance', icon: Power },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

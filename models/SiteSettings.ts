@@ -39,6 +39,13 @@ const SiteSettingsSchema = new Schema(
 
     // Security
     secretAdminCode: { type: String, default: 'letmein' },
+    maintenanceMode: { type: Boolean, default: false },
+    maintenanceMessage: { type: String, default: 'We are making a few improvements and will be back shortly.' },
+    maintenanceTitle: { type: String, default: 'We are building something sharper.' },
+    maintenanceExpectedReturn: { type: String, default: 'Back online soon' },
+    maintenanceProgress: { type: Number, min: 0, max: 100, default: 72 },
+    maintenanceShowProgress: { type: Boolean, default: true },
+    maintenanceAccent: { type: String, enum: ['violet', 'cyan', 'rose'], default: 'violet' },
 
     // Home Hero
     heroBadge: { type: String, default: 'Available for freelance work' },
