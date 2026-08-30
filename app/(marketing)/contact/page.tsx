@@ -87,6 +87,11 @@ export default function ContactPage() {
       handleSubmit(onSubmit)();
       return;
     }
+    if (!messageSystemEnabled) {
+      e.preventDefault();
+      show('Messaging is temporarily unavailable. Please try again later.', 'error');
+      return;
+    }
     handleSubmit(onSubmit)(e);
   }
 
@@ -95,6 +100,7 @@ export default function ContactPage() {
   }
 
   const maintenanceMode = maintenance.maintenanceMode === true;
+  const messageSystemEnabled = maintenance.contactFormEnabled !== false;
   const accent = maintenance.accent === 'cyan'
     ? 'from-cyan-400 via-blue-500 to-indigo-600'
     : maintenance.accent === 'rose'
@@ -132,7 +138,8 @@ export default function ContactPage() {
 
           <section className="rounded-3xl border border-white/15 bg-white/[0.08] p-5 shadow-2xl backdrop-blur-xl sm:p-7">
             <p className="text-sm font-semibold text-white">Send a message</p>
-            <p className="mt-1 text-sm leading-relaxed text-white/45">Need to reach us? Your message will still get through.</p>
+            <p className="mt-1 text-sm leading-relaxed text-white/45">{messageSystemEnabled ? 'Need to reach us? Your message will still get through.' : 'Messages are temporarily paused.'}</p>
+            {!messageSystemEnabled && <p className="mt-4 rounded-xl border border-amber-300/20 bg-amber-300/10 px-3 py-2 text-xs text-amber-100">Message delivery is currently unavailable.</p>}
             <form onSubmit={handleFormSubmit} noValidate className="mt-6 space-y-4">
               <div><Label htmlFor="name" className="text-white/75">Name *</Label><Input id="name" {...register('name')} placeholder="Your name" className="mt-1 border-white/10 bg-white/5 text-white placeholder:text-white/25" />{errors.name && <p className="mt-1 text-xs text-rose-300">{errors.name.message}</p>}</div>
               <div><Label htmlFor="email" className="text-white/75">Email *</Label><Input id="email" {...register('email')} placeholder="you@email.com" className="mt-1 border-white/10 bg-white/5 text-white placeholder:text-white/25" />{errors.email && <p className="mt-1 text-xs text-rose-300">{errors.email.message}</p>}</div>
@@ -179,6 +186,7 @@ export default function ContactPage() {
 
         <Reveal variant="slideRight">
           <form onSubmit={handleFormSubmit} noValidate className="rounded-2xl border border-border bg-white p-8 shadow-soft">
+            {!messageSystemEnabled && <p className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">Messaging is temporarily unavailable.</p>}
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <Label htmlFor="name">Name *</Label>

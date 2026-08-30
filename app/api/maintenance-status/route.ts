@@ -15,6 +15,7 @@ export async function GET() {
       progress: settings.maintenanceProgress,
       showProgress: settings.maintenanceShowProgress,
       accent: settings.maintenanceAccent,
+      contactFormEnabled: settings.contactFormEnabled,
     },
     { headers: { 'Cache-Control': 'no-store, max-age=0' } }
   );

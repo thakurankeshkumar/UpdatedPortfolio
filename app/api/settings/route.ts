@@ -18,6 +18,7 @@ const ALLOWED_SETTINGS_FIELDS = [
   'maintenanceProgress',
   'maintenanceShowProgress',
   'maintenanceAccent',
+  'contactFormEnabled',
   'heroBadge',
   'heroHeadline',
   'heroSubheadline',

@@ -46,6 +46,7 @@ const SiteSettingsSchema = new Schema(
     maintenanceProgress: { type: Number, min: 0, max: 100, default: 72 },
     maintenanceShowProgress: { type: Boolean, default: true },
     maintenanceAccent: { type: String, enum: ['violet', 'cyan', 'rose'], default: 'violet' },
+    contactFormEnabled: { type: Boolean, default: true },
 
     // Home Hero
     heroBadge: { type: String, default: 'Available for freelance work' },

@@ -17,6 +17,7 @@ export interface SiteSettings {
   maintenanceProgress: number;
   maintenanceShowProgress: boolean;
   maintenanceAccent: 'violet' | 'cyan' | 'rose';
+  contactFormEnabled: boolean;
   heroBadge: string;
   heroHeadline: string;
   heroSubheadline: string;

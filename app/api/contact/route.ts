@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import Message from '@/models/Message';
 import { sendContactNotification } from '@/lib/mail';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { getSiteSettings } from '@/services/settings';
 
 const schema = z.object({
   name: z.string().min(2).max(80),
@@ -28,6 +29,11 @@ export async function POST(req: NextRequest) {
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: 'Please fill in all required fields correctly.' }, { status: 400 });
+    }
+
+    const settings = await getSiteSettings();
+    if (settings.contactFormEnabled === false) {
+      return NextResponse.json({ error: 'Messaging is temporarily unavailable.' }, { status: 503 });
     }
 
     await connectDB();

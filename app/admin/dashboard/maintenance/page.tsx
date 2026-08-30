@@ -43,6 +43,7 @@ export default function MaintenancePage() {
           maintenanceProgress: Math.min(100, Math.max(0, Number(settings.maintenanceProgress) || 0)),
           maintenanceShowProgress: settings.maintenanceShowProgress,
           maintenanceAccent: settings.maintenanceAccent,
+          contactFormEnabled: settings.contactFormEnabled,
         }),
       });
       if (!response.ok) throw new Error();
@@ -87,11 +88,15 @@ export default function MaintenancePage() {
     <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
       <section className="rounded-3xl border border-border bg-white p-6 shadow-soft">
         <div className="flex items-center gap-2"><Sparkles size={18} className="text-primary" /><h2 className="font-heading font-semibold text-ink">Visitor experience</h2></div>
-        <p className="mt-1 text-sm text-ink/50">The only information visitors see during maintenance, beside the message form.</p>
+        <p className="mt-1 text-sm text-ink/50">The only information visitors see during maintenance, beside the message form when it is enabled.</p>
         <div className="mt-6 space-y-5">
           <div><Label htmlFor="maintenanceTitle">Headline</Label><Input id="maintenanceTitle" value={settings.maintenanceTitle || ''} maxLength={100} onChange={(event) => set('maintenanceTitle', event.target.value)} /></div>
           <div><Label htmlFor="maintenanceMessage">Update message</Label><Textarea id="maintenanceMessage" value={settings.maintenanceMessage || ''} maxLength={280} onChange={(event) => set('maintenanceMessage', event.target.value)} /></div>
           <div><Label htmlFor="maintenanceExpectedReturn">Expected return label</Label><Input id="maintenanceExpectedReturn" value={settings.maintenanceExpectedReturn || ''} maxLength={80} placeholder="Back online soon" onChange={(event) => set('maintenanceExpectedReturn', event.target.value)} /></div>
+          <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-border p-4">
+            <span><span className="block text-sm font-semibold text-ink">Accept visitor messages</span><span className="mt-1 block text-xs text-ink/50">Turn this off to reject all contact messages. Your secret code login still works.</span></span>
+            <input type="checkbox" checked={settings.contactFormEnabled !== false} onChange={(event) => set('contactFormEnabled', event.target.checked)} className="h-4 w-4 shrink-0 accent-primary" />
+          </label>
         </div>
       </section>
 

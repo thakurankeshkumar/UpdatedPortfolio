@@ -12,6 +12,7 @@ export const fallbackSettings: SiteSettings = {
   maintenanceProgress: 72,
   maintenanceShowProgress: true,
   maintenanceAccent: 'violet',
+  contactFormEnabled: true,
   heroBadge: 'Available for freelance work',
   heroHeadline: 'Software Developer. Freelancer. Content Creator.',
   heroSubheadline: 'I build scalable web applications, modern APIs and digital experiences — while documenting everything I learn along the way.',
